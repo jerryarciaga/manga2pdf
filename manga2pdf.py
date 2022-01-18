@@ -1,6 +1,7 @@
 import requests
 import img2pdf
 import os
+from PyPDF2 import PdfFileReader, PdfFileMerger
 
 #TODO Generate config file for these things
 headers = {
@@ -25,6 +26,17 @@ def download_pdf(url, filename):
 # Example Usage
 if __name__ == '__main__':
     numPages = 14 # TODO Get this number from parsing HTML
+    chapter = PdfFileMerger(strict=False)
     for page in range(numPages):
         url = f"https://cdn.readdetectiveconan.com/file/mangap/5624/10067000/{page + 1}.jpeg"
         download_pdf(url, f"Page {page + 1}")
+        currentFile = open(f"Page {page + 1}.pdf", "rb")
+        currentPage = PdfFileReader(currentFile)
+        chapter.merge(
+            position=page,
+            fileobj=currentPage,
+        )
+        currentFile.close()
+        os.remove(f"Page {page + 1}.pdf")
+    chapter.write('chapter.pdf')
+
