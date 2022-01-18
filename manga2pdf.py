@@ -10,9 +10,8 @@ headers = {
 #TODO Specify default destination for saved content
 
 
-#TODO Get this url from parsed HTML
-url = 'https://cdn.readdetectiveconan.com/file/mangap/5624/10067000/1.jpeg'
-def download_image(url, filename):
+# Download images, then convert to pdf
+def download_pdf(url, filename):
     img_filename = filename + ".jpeg"
     pdf_filename = filename + ".pdf"
     with open(img_filename, "wb") as image:
@@ -21,13 +20,11 @@ def download_image(url, filename):
             image.write(chunk)
     with open(pdf_filename, "wb") as pdf:
         pdf.write(img2pdf.convert(img_filename))
+    os.remove(img_filename)
 
-
-
-download_image(url, "Teenage Mercenary") # Example usage
-
-#TODO Define functions to download from sources and turn into full PDF
-class Manga:
-    def __init__(self):
-        pass
-
+# Example Usage
+if __name__ == '__main__':
+    numPages = 14 # TODO Get this number from parsing HTML
+    for page in range(numPages):
+        url = f"https://cdn.readdetectiveconan.com/file/mangap/5624/10067000/{page + 1}.jpeg"
+        download_pdf(url, f"Page {page + 1}")
