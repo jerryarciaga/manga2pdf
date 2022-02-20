@@ -27,8 +27,9 @@ def download_pdf(url, filename):
 if __name__ == '__main__':
     numPages = 14 # TODO Get this number from parsing HTML
     chapter = PdfFileMerger(strict=False)
+    # TODO Turn this chunk of for loop code into a function
     for page in range(numPages):
-        url = f"https://cdn.readdetectiveconan.com/file/mangap/5624/10067000/{page + 1}.jpeg"
+        url = f"https://cdn.readdetectiveconan.com/file/mangap/3262/10156000/{page+1}.jpeg"
         download_pdf(url, f"Page {page + 1}")
         currentFile = open(f"Page {page + 1}.pdf", "rb")
         currentPage = PdfFileReader(currentFile)
