@@ -29,6 +29,7 @@ if __name__ == '__main__':
     chapter = PdfFileMerger(strict=False)
     # TODO Turn this chunk of for loop code into a function
     for page in range(numPages):
+        # TODO Scrape the two numbers from this url to specify chapter
         url = f"https://cdn.readdetectiveconan.com/file/mangap/3262/10156000/{page+1}.jpeg"
         download_pdf(url, f"Page {page + 1}")
         currentFile = open(f"Page {page + 1}.pdf", "rb")
