@@ -19,7 +19,6 @@ def download_pdf(url, filename):
 
     with open(img_filename, "wb") as image:
         r = requests.get(url, headers=headers, params=params)
-        print(f"Downloading {r.url}...")
         for chunk in r.iter_content(chunk_size=128):
             image.write(chunk)
     with open(pdf_filename, "wb") as pdf:
@@ -29,23 +28,26 @@ def download_pdf(url, filename):
 # Uses download_pdf function to download a whole chapter
 def download_chapter(manga_id, chapter):
     base_url = f"https://www.readm.org/uploads/chapter_files/{manga_id}/{chapter}/"
-    page = 1
-    chapter = PdfFileMerger(strict=False)
-
-    while True: # TODO Figure out a way to do this faster
-        url = base_url + f"{page}.jpg"
+    pages = 1 # Count the number of pages in the chapter
+    while True:
+        url = base_url + f"{pages}.jpg"
         test = requests.get(url, headers=headers)
-        if test.status_code == 200:
-            download_pdf(url, str(page))
-            with open(f"{page}.pdf", "rb") as current_file:
-                current_page = PdfFileReader(current_file)
-                chapter.append(current_page)
-                current_file.close()
-            os.remove(f"{page}.pdf")
-            page += 1
-        else:
-            chapter.write("chapter.pdf")
+        if test.status_code != 200:
+            pages -= 1
             break
+        else:
+            pages += 1
+
+    chapter = PdfFileMerger(strict=False)
+    for i in range(pages):
+        page = i + 1
+        url = base_url + f"{page}.jpg"
+        download_pdf(url, str(page))
+        with open(f"{page}.pdf", "rb") as current_file:
+            current_page = PdfFileReader(current_file)
+            chapter.append(current_page)
+        os.remove(f"{page}.pdf")
+    chapter.write("chapter.pdf")
 
 if __name__ == '__main__':
     download_chapter(17427, 111)
