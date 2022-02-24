@@ -18,7 +18,8 @@ def download_pdf(url, filename):
     params = {"v": "12"} # Specific to https://readm.org
 
     with open(img_filename, "wb") as image:
-        r = requests.get(url, headers=headers, params=params)}
+        r = requests.get(url, headers=headers, params=params)
+        print(f"Downloading {r.url}...")
         for chunk in r.iter_content(chunk_size=128):
             image.write(chunk)
     with open(pdf_filename, "wb") as pdf:
@@ -26,28 +27,25 @@ def download_pdf(url, filename):
     os.remove(img_filename)
 
 # Uses download_pdf function to download a whole chapter
-def download_chapter(manga_id, chapter)
-    base_url = "https://www.readm.org/uploads/chapter_files/{manga_id}/{chapter}/"
-    current_page = 1
+def download_chapter(manga_id, chapter):
+    base_url = f"https://www.readm.org/uploads/chapter_files/{manga_id}/{chapter}/"
+    page = 1
     chapter = PdfFileMerger(strict=False)
 
+    while True: # TODO Figure out a way to do this faster
+        url = base_url + f"{page}.jpg"
+        test = requests.get(url, headers=headers)
+        if test.status_code == 200:
+            download_pdf(url, str(page))
+            with open(f"{page}.pdf", "rb") as current_file:
+                current_page = PdfFileReader(current_file)
+                chapter.append(current_page)
+                current_file.close()
+            os.remove(f"{page}.pdf")
+            page += 1
+        else:
+            chapter.write("chapter.pdf")
+            break
 
-
-# Example Usage
-#if __name__ == '__main__':
-#    numPages = 10 # TODO Get this number from parsing HTML
-#    chapter = PdfFileMerger(strict=False)
-#    # TODO Turn this chunk of for loop code into a function
-#    for page in range(numPages):
-#        url = f"https://www.readm.org/uploads/chapter_files/17427/144/{page + 1}.jpg"
-#        download_pdf(url, f"Page {page + 1}")
-#        currentFile = open(f"Page {page + 1}.pdf", "rb")
-#        currentPage = PdfFileReader(currentFile)
-#        chapter.merge(
-#            position=page,
-#            fileobj=currentPage,
-#        )
-#        currentFile.close()
-#        os.remove(f"Page {page + 1}.pdf")
-#    chapter.write('chapter.pdf')
-
+if __name__ == '__main__':
+    download_chapter(17427, 111)
