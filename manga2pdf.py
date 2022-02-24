@@ -27,7 +27,7 @@ def download_pdf(url, filename):
     os.remove(img_filename)
 
 # Uses download_pdf function to download a whole chapter
-def download_chapter(manga_id, chapter):
+def download_chapter(manga_id, chapter, chapter_title):
     base_url = f"https://www.readm.org/uploads/chapter_files/{manga_id}/{chapter}/"
     pages = 1 # Count the number of pages in the chapter
     while True:
@@ -40,7 +40,7 @@ def download_chapter(manga_id, chapter):
             pages += 1
 
     chapter = PdfFileMerger(strict=False)
-    for i in tqdm(range(pages), desc="Downloading chapter...",
+    for i in tqdm(range(pages), desc=f"Downloading {chapter_title}...",
                   ascii=False, ncols=75):
         page = i + 1
         url = base_url + f"{page}.jpg"
@@ -49,7 +49,9 @@ def download_chapter(manga_id, chapter):
             current_page = PdfFileReader(current_file, strict=False)
             chapter.append(current_page)
         os.remove(f"{page}.pdf")
-    chapter.write("chapter.pdf")
+    chapter.write(f"{chapter_title}.pdf")
 
 if __name__ == '__main__':
-    download_chapter(17427, 111)
+    download_chapter(17427, 1, "Chapter 1")
+    download_chapter(17427, 2, "Chapter 2")
+    download_chapter(17427, 3, "Chapter 3")
