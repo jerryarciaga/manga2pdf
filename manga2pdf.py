@@ -2,6 +2,7 @@ import requests
 import img2pdf
 import os
 from PyPDF2 import PdfFileReader, PdfFileMerger
+from tqdm import tqdm
 
 #TODO Generate config file for these things
 headers = {
@@ -39,12 +40,13 @@ def download_chapter(manga_id, chapter):
             pages += 1
 
     chapter = PdfFileMerger(strict=False)
-    for i in range(pages):
+    for i in tqdm(range(pages), desc="Downloading chapter...",
+                  ascii=False, ncols=75):
         page = i + 1
         url = base_url + f"{page}.jpg"
         download_pdf(url, str(page))
         with open(f"{page}.pdf", "rb") as current_file:
-            current_page = PdfFileReader(current_file)
+            current_page = PdfFileReader(current_file, strict=False)
             chapter.append(current_page)
         os.remove(f"{page}.pdf")
     chapter.write("chapter.pdf")
