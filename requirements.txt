@@ -9,4 +9,5 @@ Pillow==9.0.0
 pyparsing==3.0.6
 PyPDF2==1.26.0
 requests==2.27.1
+tqdm==4.62.3
 urllib3==1.26.8
