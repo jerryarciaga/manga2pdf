@@ -1,5 +1,6 @@
 certifi==2021.10.8
 charset-normalizer==2.0.10
+configparser==5.2.0
 idna==3.3
 img2pdf==0.4.3
 lxml==4.7.1
