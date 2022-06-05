@@ -52,6 +52,6 @@ def download_chapter(manga_id, chapter, chapter_title):
     chapter.write(f"{chapter_title}.pdf")
 
 if __name__ == '__main__':
-    download_chapter(17427, 1, "Chapter 1")
-    download_chapter(17427, 2, "Chapter 2")
-    download_chapter(17427, 3, "Chapter 3")
+    download_chapter(17427, 50, "Chapter 1")
+    download_chapter(17427, 51, "Chapter 2")
+    download_chapter(17427, 52, "Chapter 3")
