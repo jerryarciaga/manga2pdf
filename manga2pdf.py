@@ -25,7 +25,10 @@ def search_manga():
     for result in results:
         print(f"{index}. {result.text.strip()}")
         index += 1
-    return results[0].find("a")["href"]
+
+    # Have user select what manga to download
+    choice = input("Enter number of title to download: ")
+    return results[int(choice)-1].find("a")["href"]
 
 if __name__ == "__main__":
     lambsauce = search_manga()
