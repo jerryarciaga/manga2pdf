@@ -7,7 +7,6 @@ from PyPDF2 import PdfFileReader, PdfFileMerger
 def search_manga():
     site = "https://mangareader.to/search"
     user_agent = "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0"
-    tmp_dir = "/tmp"
 
     search_title = input("Enter manga title: ")
     params = {
@@ -19,11 +18,18 @@ def search_manga():
     search = requests.get(site, params=params)
     search_soup = BeautifulSoup(search.text, "html.parser")
 
-    # Then print
+    # Then print numbered list
     results = search_soup.find_all("h3", class_="manga-name")
+    index = 1
+    print(f"Results for {search_title}:\n")
     for result in results:
-        print(result.text)
-
+        print(f"{index}. {result.text.strip()}")
+        index += 1
+    return results[0].find("a")["href"]
 
 if __name__ == "__main__":
-    search_manga()
+    lambsauce = search_manga()
+    print(f'''
+        Gordon: Where's the lamb sauce?
+        manga2pdf: {lambsauce}
+    ''')
