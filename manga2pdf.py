@@ -44,7 +44,8 @@ def select_chapter(url):
     print(chapter_soup)
 
     # Then print chapter by chapter
-    chapters = chapter_soup.find_all("li", class_="item reading-item chapter-item")
+    english_chapters = chapter_soup.find("ul", id="en-chapters")
+    chapters = english_chapters.find_all("li", class_="item reading-item chapter-item")
     index = 1
     for chapter in chapters:
         title = chapter.find(class_="item-link").find(class_="name")
